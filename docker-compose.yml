@@ -1,0 +1,14 @@
+
+services:
+  client:
+    build:
+      context: ./client
+    ports:
+      - "5173:80"
+    restart: unless-stopped
+    networks:
+      - demo-networks
+    
+networks:
+    demo-networks:
+      external: true

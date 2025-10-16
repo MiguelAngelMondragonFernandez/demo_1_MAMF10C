@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    environment {
+        PATH = "/usr/local/bin:${env.PATH}"
+    }
+
+    stages {
+            //Etapa para parar los servicios
+            stage('parando los servicios'){
+                steps {
+                    sh '''
+                        docker compose -p demo_1 down || true
+                    '''
+                    sh '''
+                        echo "Servicios detenidos"
+                    '''
+                }
+            }
+            //Etapa para eliminar imagenes antiguas
+            stage('eliminando imagenes antiguas'){
+                steps {
+                    sh '''
+                        IMAGES=$(docker images --filter "label=com.docker.compose.project=demo_1" -q)
+                        if [ -n "$IMAGES" ]; then
+                            docker rmi -f $IMAGES
+                        else 
+                            echo "No hay imagenes para eliminar"
+                        fi
+                    '''
+                    sh '''
+                        echo "Imagenes antiguas eliminadas"
+                    '''
+                }
+            }
+            //Etapa para descargar la actualizacion del repo
+            stage('descargando actualizacion del repo'){
+                steps {
+                    checkout scm
+                }
+            }
+            //Etapa para construir y desplegar 
+            stage('construyendo y desplegando'){
+                steps {
+                    sh '''
+                        docker compose up --build -d
+                    '''
+                    sh '''
+                        echo "Aplicacion desplegada"
+                    '''
+                }
+            }
+
+            post{
+                always {
+                    echo 'pipeline ejecutado correctamente'
+                }
+                success {
+                    echo 'pipeline finalizado con exito'
+                }
+                failure {
+                    echo 'pipeline fallido'
+                }
+            }
+    }
+}
