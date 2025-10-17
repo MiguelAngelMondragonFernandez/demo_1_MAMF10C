@@ -50,6 +50,7 @@ pipeline {
                     '''
                 }
             }
+    }
 
     post{
         always {
@@ -61,6 +62,5 @@ pipeline {
         failure {
             echo 'pipeline fallido'
         }
-    }
     }
 }
