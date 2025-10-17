@@ -51,16 +51,16 @@ pipeline {
                 }
             }
 
-            post{
-                always {
-                    echo 'pipeline ejecutado correctamente'
-                }
-                success {
-                    echo 'pipeline finalizado con exito'
-                }
-                failure {
-                    echo 'pipeline fallido'
-                }
-            }
+    post{
+        always {
+            echo 'pipeline ejecutado correctamente'
+        }
+        success {
+            echo 'pipeline finalizado con exito'
+        }
+        failure {
+            echo 'pipeline fallido'
+        }
+    }
     }
 }
