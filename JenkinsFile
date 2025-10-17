@@ -10,7 +10,7 @@ pipeline {
             stage('parando los servicios'){
                 steps {
                     sh '''
-                        sudo docker compose -p demo_1 down || true
+                        docker compose -p demo_1 down || true
                     '''
                     sh '''
                         echo "Servicios detenidos"
@@ -21,7 +21,7 @@ pipeline {
             stage('eliminando imagenes antiguas'){
                 steps {
                     sh '''
-                        IMAGES=$(sudo docker images --filter "label=com.docker.compose.project=demo_1" -q)
+                        IMAGES=$(docker images --filter "label=com.docker.compose.project=demo_1" -q)
                         if [ -n "$IMAGES" ]; then
                             docker rmi -f $IMAGES
                         else 
@@ -43,7 +43,7 @@ pipeline {
             stage('construyendo y desplegando'){
                 steps {
                     sh '''
-                        sudo docker compose up --build -d
+                        docker compose up --build -d
                     '''
                     sh '''
                         echo "Aplicacion desplegada"
